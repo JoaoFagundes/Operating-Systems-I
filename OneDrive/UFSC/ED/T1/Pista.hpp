@@ -23,7 +23,7 @@ class Pista : private Fila<Carro> {
  		maxCarros = (int) (tamanho_ / 5);
  	}
 
-	Pista getProximaPista(int randomProximaPista) {
+	Pista getProximaPista() {
 		int randNum = (rand() % 100);
 		switch (randNum) {
 			case (randNum < probabilidades[0]) :
