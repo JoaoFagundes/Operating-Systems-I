@@ -5,7 +5,7 @@
 #include "Carro.hpp"
 #include "Lista.hpp"
 
-class Pista : Fila<Carro> {
+class Pista : private Fila<Carro> {
  private:
 	Pista pistasAdjacentes [10]; 
 	int velocidade, tamanho, maxCarros, tamanhoDisponivel;
