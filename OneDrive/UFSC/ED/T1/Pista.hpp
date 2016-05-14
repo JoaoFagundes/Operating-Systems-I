@@ -35,4 +35,16 @@ class Pista : Fila<Carro> {
 	Pista getProximaPista(int randomProximaPista) {
 		return pistasAdjacentes[randomProximaPista];
 	}
+
+	int getVelocidade() {
+		return velocidade;
+	}
+
+	int getTamanho() {
+		return tamanho;
+	}
+
+	int calculaTempoDaPista() {
+		return (int) (tamanho / velocidade);
+	}
 }

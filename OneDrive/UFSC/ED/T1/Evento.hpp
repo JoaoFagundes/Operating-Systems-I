@@ -1,16 +1,21 @@
 #include <stdlib.h>
 
 class Evento {
- public:
- 	void novoCarro() {
+ private:
+ 	int segundoDeExecucao;
 
+ public:
+
+ 	
+ 	void novoCarro(Carro carro) {
+ 		carro.getPistaAtual().getVelocidade();
  	}
 
  	void semaforoMudou() {
 
  	}
 
- 	void carroChegouNoSemaforo(Pista proximaPista {
+ 	void carroChegouNoSemaforo(Pista proximaPista) {
  		if (proximaPista.isCheia())
  			fail
  		else

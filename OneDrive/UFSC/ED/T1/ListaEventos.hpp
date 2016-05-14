@@ -1,0 +1,3 @@
+class ListaEventos : ListaEnc<Evento> {
+	
+}
