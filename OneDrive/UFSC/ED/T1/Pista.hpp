@@ -35,7 +35,6 @@ class Pista : private Fila<Carro> {
 			case (randNum >= probabilidades[1] && randNum < probabilidades[2]) :
 				return pistasAdjacentes[2]
 		}
-		return pistasAdjacentes[randomProximaPista];
 	}
 	int getVelocidade() {
 		return velocidade;
