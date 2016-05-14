@@ -7,7 +7,7 @@ class Semaforo {
  	Semaforo() {
  		
  	}
-
+ 
  	Pista proximaPista(Pista pistaAtual) {
  		srand(time(0));
  		int random = rand() % 10;

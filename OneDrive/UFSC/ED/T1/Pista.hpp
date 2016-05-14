@@ -5,39 +5,38 @@
 #include "Carro.hpp"
 #include "Lista.hpp"
 
-class Pista : private FilaEnc<Carro> {
+class Pista : private Fila<Carro> {
  private:
-	Pista pistasAdjacentes [10]; 
-	int velocidade, tamanho, maxCarros, espacoDisponivel;
+	Pista pistasAdjacentes [3]; 
+	int velocidade, tamanho, maxCarros, tamanhoDisponivel;
 	bool pistaCheia, fonte, sumidouro;
-
+	int probabilidades[3];
  public:
- 	Pista(int _velocidade, int _tamanho, bool fonte_, bool sumidouro_) {
- 		velocidade = _velocidade;
- 		tamanho = _tamanho;
- 		espacoDisponivel = _tamanho;
- 		fonte = fonte_;
- 		sumidouro = sumidouro_;
- 		maxCarros = (int) (_tamanho / 5);
+ 		// inicializa a pista com os atributos necessários.
+ 		// probabilidade[x] corresponde a probabilidade de ir pra pistaAdjacente[x]
+ 	Pista(int velocidade_, int tamanho_, int probabilidades[3]_, Pista[] pistas[3]) {
+ 		velocidade = velocidade_;
+ 		tamanho = tamanho_;
+ 		tamanhoDisponivel = tamanho_;
+ 		probabilidades = probabilidades_;
+ 		pistasAdjacentes = pistas;
+ 		maxCarros = (int) (tamanho_ / 5);
  	}
 
- 	void setPistasAdjacentes(int[] probabilidade, Pista[] pistas) {
- 		int i = 0;
-
- 		for (i; i < 10; i++) {
- 			if (i < probabilidade[0])
- 				pistasAdjacentes[i] = pistas[0];
- 			else if (i < probabilidade[0] + probabilidade[1])
- 				pistasAdjacentes[i] = pistas[1];
- 			else
- 				pistasAdjacentes[i] = pistas[2];
- 		}
-	}
-
 	Pista getProximaPista(int randomProximaPista) {
+		int randNum = (rand() % 100);
+		switch (randNum) {
+			case (randNum < probabilidades[0]) :
+				return pistasAdjacentes[0]
+				break;
+			case (randNum >= probabilidades[0] && randNum < probabilidades[1]) :
+				return pistasAdjacentes[1]
+				break;
+			case (randNum >= probabilidades[1] && randNum < probabilidades[2]) :
+				return pistasAdjacentes[2]
+		}
 		return pistasAdjacentes[randomProximaPista];
 	}
-
 	int getVelocidade() {
 		return velocidade;
 	}
@@ -46,31 +45,7 @@ class Pista : private FilaEnc<Carro> {
 		return tamanho;
 	}
 
-	bool isFonte() {
-		return fonte;
-	}
-
-	bool isSumidouro() {
-		return sumidouro;
-	}
-
-	bool cabeCarroNaPista(Carro *carro) {
-		if (espacoDisponivel >= carro.getTamanho())
-			return true;
-		else
-			return false;
-	}
-
 	int calculaTempoDaPista() {
-		return (int) (tamanho / velocidade);, 
-	}
-
-	void adicionaCarro(Carro *carro) {
-		espacoDisponivel -= carro.getTamanho();
-		FilaEnc<Carro>::inclui(*carro);
-	}
-
-	Carro retiraCarro() {
-		return FilaEnc<Carro>::retira();
+		return (int) (tamanho / velocidade);
 	}
 }

@@ -8,7 +8,6 @@ class ListaEventos : private ListaEnc<Evento> {
 
  	void processaEvento() {
  		Evento evento = ListaEnc<Evento>::retiraDoInicio();
- 		
  	}
 
 }
