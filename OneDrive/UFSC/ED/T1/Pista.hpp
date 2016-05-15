@@ -27,16 +27,12 @@ class Pista : private FilaEnc<Carro> {
 
 	Pista getProximaPista() {
 		int randNum = (rand() % 100);
-		switch (randNum) {
-			case (randNum < probabilidades[0]) :
-				return pistasAdjacentes[0]
-				break;
-			case (randNum >= probabilidades[0] && randNum < probabilidades[1]) :
-				return pistasAdjacentes[1]
-				break;
-			case (randNum >= probabilidades[1] && randNum < probabilidades[2]) :
-				return pistasAdjacentes[2]
-		}
+		if (randNum < probabilidades[0]) 
+			return pistasAdjacentes[0]
+		else if (randNum < (probabilidades[0] + probabilidades[1]))
+			return pistasAdjacentes[1]
+		else 
+			return pistasAdjacentes[2]
 	}
 
 	int getVelocidade() {
@@ -59,7 +55,7 @@ class Pista : private FilaEnc<Carro> {
  	}
  
  	bool cabeCarroNaPista(Carro *carro) {
- 		if (espacoDisponivel >= carro.getTamanho())
+ 		if (espacoDisponivel >= carro -> getTamanho())
  			return true;
  		else
  			return false;

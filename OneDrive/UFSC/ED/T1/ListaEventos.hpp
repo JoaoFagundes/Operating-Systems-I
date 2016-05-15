@@ -1,13 +1,25 @@
 #include "ListaEnc.hpp"
 
 class ListaEventos : private ListaEnc<Evento> {
+ 
  private:
+ 	int tempoDoEventoAtual;
+
+ public:
+ 	ListaEventos();
+
  	void adicionaEvento(Evento e) {
  		ListaEnc<Evento>::adicionaEmOrdem(e);
  	}
 
- 	void processaEvento() {
+ 	Evento processaEvento() {
  		Evento evento = ListaEnc<Evento>::retiraDoInicio();
+ 		tempoDoEventoAtual = evento -> getMomentoQueExecuta();
+ 		return evento;
+ 	}
+
+ 	bool maior(Evento *evento1, Evento *evento2) const {
+ 		return evento1 -> getMomentoQueExecuta() > evento2 -> getMomentoQueExecuta();
  	}
 
 }

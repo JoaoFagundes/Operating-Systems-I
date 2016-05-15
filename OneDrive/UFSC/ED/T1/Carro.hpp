@@ -13,6 +13,11 @@ class Carro {
  		pistaAtual = pistaAtual_;
  	}
 
+ 	~Carro() {
+ 		delete tamanho;
+ 		delete pistaAtual;
+ 	}
+
  	int calculaTamanho() {
  		//Inicia o seed de rand() com uma timestamp
    		srand(time(0));

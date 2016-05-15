@@ -2,33 +2,48 @@
 
 class Evento {
  private:
- 	int segundoDeExecucao;
- 	String tipo;
+ 	int momentoQueExecuta;
+
+ 	// inteiro que determina o tipo de evento:
+ 	/* 
+		0 = Novo carro entrou na pista;
+		1 = Semáforo mudou de estado;
+		2 = Carro chegou em um semáforo;
+		3 = Carrou trocou de pista.
+ 	*/
+ 	int tipoEvento;
 
  public:
 
- 	void processaEvento(Evento e) {	
- 		
- 	}
- 	void novoCarro(Carro carro) {
- 		carro.getPistaAtual().getVelocidade();
- 	}
- 	void semaforoMudou() {
-
- 	}
- 	void carroChegouNoSemaforo(Pista proximaPista) {
- 		if (proximaPista.isCheia())
- 			fail
- 		else
- 	}
- 	void carroTrocouDePista(Pista pistaAtual, Carro carro) {
+ 	Evento(int momentoQueExecuta_, int tipoEvento_) {
+ 		momentoQueExecuta = momentoQueExecuta_;
+ 		tipoEvento = tipoEvento;
+ 		processaEvento();
  	}
 
- 	String getTipo() {
+ 	void processaEvento() {	
+ 		switch (tipoEvento) {
+ 			case 0:
+
+ 			case 1:
+
+ 			case 2:
+
+ 			case 3: 
+ 		}
+ 	}
+
+ 	String getTipoEvento() {
  		return tipo;
  	}
 
- 	String setTipo(String tipo_) {
- 		tipo = tipo_;
+ 	int setTipoEvento(int tipo_) {
+ 		tipoEvento = tipo_;
  	}
+
+ 	int getMomentoQueExecuta() {
+ 		return momentoQueExecuta;
+ 	}
+
+
 }
