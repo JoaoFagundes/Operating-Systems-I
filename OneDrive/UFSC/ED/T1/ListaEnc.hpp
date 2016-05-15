@@ -339,6 +339,33 @@ class ListaEnc {
 	    size = 0;
 	}
 
+    //! Uma função que retorna o inteiro armazenado pela variável "size".
+    /*!
+        \return um inteiro informando o valor da variável "size".
+        \sa setSize() and setHead()
+    */
+    int getSize() {
+        return size;
+    }
+
+    //! Uma função que altera o valor armazenado pela variável "size".
+    /*!
+        \param _size o novo valor que deverá ser atribuído à variável "size".
+        \sa getSize() and setHead()
+    */
+	void setSize(int _size) {
+	    size = _size;
+	}
+
+    //! Uma função que altera o valor armazenado pela variável "head".
+    /*!
+        \param _head o novo valor que deverá ser atribuído à variável "head".
+        \sa setSize()
+    */
+    void setHead(Elemento<T>* _head) {
+        head = _head;
+    }
+
  private:
     //! Uma váriavel do tipo 'Elemento<T>'.
     /*!
