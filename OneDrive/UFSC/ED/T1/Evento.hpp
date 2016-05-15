@@ -10,7 +10,7 @@ class Evento {
  	void processaEvento(Evento e) {	
  		
  	}
- 	void novoCarro() {
+ 	void novoCarro(Carro carro) {
  		carro.getPistaAtual().getVelocidade();
  	}
  	void semaforoMudou() {
