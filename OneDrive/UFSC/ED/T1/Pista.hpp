@@ -14,7 +14,7 @@ class Pista : private FilaEnc<Carro> {
  public:
  		// inicializa a pista com os atributos necessários.
  		// probabilidade[x] corresponde a probabilidade de ir pra pistaAdjacente[x]
- 	Pista(int _velocidade, int _tamanho, int _probabilidades[3], Pista[] pistas[3], bool _fonte, bool _sumidouro) {
+ 	Pista(int _velocidade, int _tamanho, bool _fonte, bool _sumidouro) {
 		velocidade = _velocidade;
 		tamanho = _tamanho;
 		espacoDisponivel = _tamanho;
@@ -25,16 +25,6 @@ class Pista : private FilaEnc<Carro> {
 		probabilidades = _probabilidades;
  	}
 
-	Pista getProximaPista() {
-		int randNum = (rand() % 100);
-		if (randNum < probabilidades[0]) 
-			return pistasAdjacentes[0]
-		else if (randNum < (probabilidades[0] + probabilidades[1]))
-			return pistasAdjacentes[1]
-		else 
-			return pistasAdjacentes[2]
-	}
-
 	int getVelocidade() {
 		return velocidade;
 	}
@@ -44,7 +34,7 @@ class Pista : private FilaEnc<Carro> {
 	}
 
 	int calculaTempoDaPista() {
-		return (int) (tamanho / velocidade);
+		return (int) (tamanho / (velocidade / 3,6));
 	}
 	bool isFonte() {
  		return fonte;
