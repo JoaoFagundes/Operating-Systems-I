@@ -14,15 +14,15 @@ class Pista : private FilaEnc<Carro> {
  public:
  		// inicializa a pista com os atributos necessários.
  		// probabilidade[x] corresponde a probabilidade de ir pra pistaAdjacente[x]
- 	Pista(int velocidade_, int tamanho_, int probabilidades_[3], Pista[] pistas[3], bool fonte_, bool sumidouro_) {
+ 	Pista(int _velocidade, int _tamanho, int _probabilidades[3], Pista[] pistas[3], bool _fonte, bool _sumidouro) {
 		velocidade = _velocidade;
 		tamanho = _tamanho;
 		espacoDisponivel = _tamanho;
-		fonte = fonte_;
-		sumidouro = sumidouro_;
+		fonte = _fonte;
+		sumidouro = _sumidouro;
 		maxCarros = (int) (_tamanho / 5);
 		pistasAdjacentes = pistas;
-		probabilidades = probabilidades_;
+		probabilidades = _probabilidades;
  	}
 
 	Pista getProximaPista() {
