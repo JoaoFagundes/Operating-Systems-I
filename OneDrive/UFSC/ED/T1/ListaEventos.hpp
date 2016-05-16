@@ -5,7 +5,7 @@ class ListaEventos : private ListaEnc<Evento> {
  public:
  	ListaEventos();
 
- 	void adicionaEvento(Evento e) {
+ 	void adicionaEvento(Evento *e) {
  		ListaEnc<Evento>::adicionaEmOrdem(e);
  	}
 

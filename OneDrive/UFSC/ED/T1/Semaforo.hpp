@@ -7,9 +7,9 @@ class Semaforo {
 	int *probabilidades;
 	bool aberto;
  public:
- 	Semaforo(Pista *_pistaAtual, bool aberto_) {
+ 	Semaforo(Pista *_pistaAtual, bool _aberto) {
  		pistaAtual = _pistaAtual;
- 		aberto = aberto_;
+ 		aberto = _aberto;
  	}
 
  	void setProbabilidades(Pista[] pistas[3], int _probabilidades[3]) {
@@ -35,10 +35,8 @@ class Semaforo {
  	void mudaEstado() {
  		aberto = !aberto;
  	}
- 
- 	Pista proximaPista(Pista pistaAtual) {
- 		srand(time(0));
- 		int random = rand() % 10;
- 		return pistaAtual -> getProximaPista(random);
+
+ 	int calculaTrocaDeEstado(int _tempoAtual, int _tempoDeSemaforo) {
+ 		return _tempoAtual + _tempoDeSemaforo;
  	}
 }

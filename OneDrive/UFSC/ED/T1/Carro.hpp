@@ -8,9 +8,9 @@ class Carro {
  
  public:
 
- 	Carro(Pista pistaAtual_) {
+ 	Carro(Pista _pistaAtual) {
  		tamanho = calculaTamanho();
- 		pistaAtual = pistaAtual_;
+ 		pistaAtual = _pistaAtual;
  	}
 
  	~Carro() {
@@ -29,8 +29,8 @@ class Carro {
  	int getTamanho() {
  			return tamanho;
    	}
- 	void setPistaAtual(pistaAtual_) {
- 		pistaAtual = pistaAtual_;
+ 	void setPistaAtual(_pistaAtual) {
+ 		pistaAtual = _pistaAtual;
  	}
 
  	Pista getPistaAtual() {

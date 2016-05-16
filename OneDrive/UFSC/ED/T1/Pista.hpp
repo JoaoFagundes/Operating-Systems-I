@@ -13,8 +13,6 @@ class Pista : private FilaEnc<Carro> {
 	bool pistaCheia, fonte, sumidouro;
 	int probabilidades[3];
  public:
- 		// inicializa a pista com os atributos necessários.
- 		// probabilidade[x] corresponde a probabilidade de ir pra pistaAdjacente[x]
  	Pista(int _velocidade, int _tamanho, bool _fonte, bool _sumidouro) {
 		velocidade = _velocidade;
 		tamanho = _tamanho;
@@ -45,6 +43,9 @@ class Pista : private FilaEnc<Carro> {
  		return sumidouro;
  	}
 
+ 	// Diz o de quanto em quanto tempo uma pista fonte tem que 
+ 	// criar um novo carro, com a variável "_tempoVariante"
+ 	// informando o intervalo.
  	void setTempoDeFonte(int _tempoFixo, int _tempoVariante) {
  		fonte_tempoFixo = _tempoFixo;
  		fonte_tempoVariante = _tempoVariante;
@@ -57,11 +58,10 @@ class Pista : private FilaEnc<Carro> {
  		else
  			return false;
  	}
- 
-  	int calculaTempoDaPista() {
- 		return (int) (tamanho / velocidade);, 
- 	}
 
+ 	// Calcula o tempo que a pista fonte deve inserir um novo carr
+ 	// baseado nas suas variáveis fonte_tempoVariante, fonte_tempoFixo
+ 	// e fonte_intervalo.
  	int calculaTempoDeInserirCarro(int tempoAtual) {
  		srand(time(0));
  		// Acha um número randômico dentro do intervalo proposto e soma
