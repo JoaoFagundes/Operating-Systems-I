@@ -1,4 +1,5 @@
 #include "ListaEnc.hpp"
+#include "Evento.hpp"
 
 class ListaEventos : private ListaEnc<Evento> {
 

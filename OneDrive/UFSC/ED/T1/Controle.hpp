@@ -1,14 +1,27 @@
 #include "ListaCirc.hpp"
 #include "ListaEnc.hpp"
+#include "ListaEventos.hpp"
+#include "Semaforo.hpp"
+#include "Pista.hpp"
+#include "Carro.hpp"
+#include "ExcecaoSinalVermelho.hpp"
+#include "Evento.hpp"
+#include <stdlib.h>
+#include <iostream>
 
 class Controle {
  private: 
+ 	static int carrosQueEntraram;
+ 	static int carrosQueSairam;
  	ListaCirc(*Semaforo) *s1, *s2;
  	ListaEnc(*Pista) *listaDePistas;
  	ListaEventos *listaDeEventos;
  	int tempoDeSimulacao, tempoSemaforo, tempoAtualDoSistema;
 
  public:
+ 	Controle() {
+
+ 	}
  	Controle(int _tempoDeSimulacao, int _tempoSemaforo) {
  		tempoDeSimulacao = _tempoDeSimulacao;
  		tempoSemaforo = _tempoSemaforo;
@@ -91,6 +104,7 @@ class Controle {
  		create_insereCarros();
  		create_semaforosMudamDeEstado();
  		create_carrosChegamEmSemaforo();
+ 		processaEvento();
  	}
 
  	// MÉTODOS DE CRIAÇÃO:
@@ -194,18 +208,29 @@ class Controle {
  			listaDeEventos -> retiraEspecifico(evento);
  		}
 
+ 		imprimeResultadoDaSimulacao();
+
  	}
 
  	void carroChegouEmSemaforo(Evento *evento) {
+ 		int tempoQueOSemaforoAbre;
  		int tempoDoEvento = evento -> getMomentoQueExecuta();
  		Semaforo *semaforo = evento -> getSemaforo();
  		Pista *proximaPista = semaforo -> getProximaPista();
- 		if (proximaPista -> cabeCarroNaPista(evento -> getCarro())) {
- 			semaforo -> trocaCarroDePista(proximaPista, evento -> getCarro());
- 			carroEntrouEmNovaPista(evento -> getCarro(), tempoDoEvento);
+ 		Evento *novoEvento;
+ 		try {
+ 			if (proximaPista -> cabeCarroNaPista(evento -> getCarro())) {
+ 				semaforo -> trocaCarroDePista(proximaPista, evento -> getCarro());
+ 				carroEntrouEmNovaPista(evento -> getCarro(), tempoDoEvento);
+ 			} else { 
+ 				novoEvento = new Evento(tempoDoEvento + 2, 2, evento -> getCarro(), semaforo);	
+ 			}
+ 		} catch (exception& e) {
+ 			tempoQueOSemaforoAbre = achaAberturaDeSemaforo(tempoDoEvento, semaforo);
+ 			novoEvento = new Evento(tempoQueOSemaforoAbre + 1, 2, evento -> getCarro(), semaforo);
  		}
- 		else 
- 			Evento *novoEvento = new Evento(tempoDoEvento + 2, 2, evento -> getCarro(), evento -> getSemaforo());	
+
+ 		listaDeEventos -> adicionaEvento(novoEvento);
  	}
 
  	void carroEntrouEmNovaPista(Carro *carro, int tempoAtual) {
@@ -220,6 +245,11 @@ class Controle {
  		listaDeEventos -> adicionaEvento(novoEvento);
  	}
 
+ 	void imprimeResultadoDaSimulacao() {
+ 		printf("Número de carros que entraram no sistema: %d.\n", carrosQueEntraram);
+ 		printf("Número de carros que saíram do sistema: %d.\n", carrosQueSairam);
+ 	}
+
  	Semaforo achaSemaforo(Pista *pista) {
  		int i;
  		for (i = 0; i < s1 -> getSize(); i++) {
@@ -230,6 +260,33 @@ class Controle {
  			else if (semaforo2 -> getPistaAtual() == pista)
  				return semaforo2;
  		}
+ 	}
+
+ 	int achaAberturaDeSemaforo(int tempoAtual, Semaforo *semaforo) {
+ 		int i;
+ 		for (i = 0; i < listaDeEventos -> getSize(); i++) {
+ 			Evento *evento = listaDeEventos -> mostra(i);
+ 			if (evento -> getTipoEvento() == 1 && evento -> getMomentoQueExecuta >= tempoAtual
+ 				&& semaforo == evento -> getSemaforo()) {
+ 				return evento -> getMomentoQueExecuta();
+ 			}
+ 		}
+ 	}
+
+ 	void adicionaCarrosQueEntraram() {
+ 		carrosQueEntraram++;
+ 	}
+
+ 	int getCarrosQueEntraram() {
+ 		return carrosQueEntraram;
+ 	}
+
+ 	void adicionaCarrosQueSairam() {
+ 		carrosQueSairam++;
+ 	}
+
+ 	int getCarrosQueSairam() {
+ 		return carrosQueSairam;
  	}
 
 }	

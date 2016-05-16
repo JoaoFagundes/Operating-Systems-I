@@ -1,4 +1,6 @@
+#include <stdlib.h>
 #include "Pista.hpp"
+#include "ExcecaoSinalFechado.hpp"
 
 class Semaforo {
  private:

@@ -76,9 +76,11 @@ class Pista : private FilaEnc<Carro> {
  	void adicionaCarro(Carro *carro) {
  		espacoDisponivel -= carro.getTamanho();
  		FilaEnc<Carro>::inclui(*carro);
+ 		Controle::adicionaCarrosQueEntraram();
  	}
  
  	Carro retiraCarro() {
+ 		Controle::adicionaCarrosQueSairam();
  		return FilaEnc<Carro>::retira();
   	}
 }

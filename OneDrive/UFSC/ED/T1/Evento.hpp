@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "ListaEnc.hpp"
 
 class Evento {
  private:
