@@ -9,6 +9,7 @@ class Pista : private FilaEnc<Carro> {
  private:
 	Pista pistasAdjacentes[3]; 
 	int velocidade, tamanho, maxCarros, espacoDisponivel;
+	int fonte_tempoFixo, fonte_intervalo, fonte_tempoVariante;
 	bool pistaCheia, fonte, sumidouro;
 	int probabilidades[3];
  public:
@@ -43,6 +44,12 @@ class Pista : private FilaEnc<Carro> {
  	bool isSumidouro() {
  		return sumidouro;
  	}
+
+ 	void setTempoDeFonte(int _tempoFixo, int _tempoVariante) {
+ 		fonte_tempoFixo = _tempoFixo;
+ 		fonte_tempoVariante = _tempoVariante;
+ 		fonte_intervalo =  (2 * _tempoVariante) + 1;
+ 	}
  
  	bool cabeCarroNaPista(Carro *carro) {
  		if (espacoDisponivel >= carro -> getTamanho())
@@ -53,6 +60,17 @@ class Pista : private FilaEnc<Carro> {
  
   	int calculaTempoDaPista() {
  		return (int) (tamanho / velocidade);, 
+ 	}
+
+ 	int calculaTempoDeInserirCarro(int tempoAtual) {
+ 		srand(time(0));
+ 		// Acha um número randômico dentro do intervalo proposto e soma
+ 		// ao menor valor do intervalo.
+ 		int tempoDeExecucao = ( (rand() % fonte_intervalo) + (fonte_tempoFixo - fonte_tempoVariante));
+
+ 		// Soma o resultado da expressão anterior com o tempo atual do sistema
+ 		// para descobrir o real tempo de execução desse evento e o retorna.
+ 		return tempoDeExecucao + tempoAtual;
  	}
  
  	void adicionaCarro(Carro *carro) {

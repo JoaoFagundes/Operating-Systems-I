@@ -7,12 +7,12 @@ class Semaforo {
 	int *probabilidades;
 	bool aberto;
  public:
- 	Semaforo(bool aberto_) {
+ 	Semaforo(Pista *_pistaAtual, bool aberto_) {
+ 		pistaAtual = _pistaAtual;
  		aberto = aberto_;
  	}
 
- 	void setProbabilidades(Pista *_pistaAtual, Pista[] pistas[3], int _probabilidades[3]) {
- 		pistaAtual = _pistaAtual;
+ 	void setProbabilidades(Pista[] pistas[3], int _probabilidades[3]) {
  		probabilidades = _probabilidades;
  		pistasDestino = pistas;
  	}

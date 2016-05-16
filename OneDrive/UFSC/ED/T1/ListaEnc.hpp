@@ -366,6 +366,12 @@ class ListaEnc {
         head = _head;
     }
 
+    T mostra(int pos) {
+		T dadoRetorno = retiraDaPosicao(pos);
+		adicionaNaPosicao(dadoRetorno, pos);
+		return dadoRetorno;
+	}
+
  private:
     //! Uma váriavel do tipo 'Elemento<T>'.
     /*!

@@ -5,13 +5,14 @@ class Controle {
  private: 
  	ListaCirc(*Semaforo) *s1, *s2;
  	ListaEnc(*Pista) *listaDePistas;
- 	ListaEventos *listaEventos;
- 	int tempoDeSimulacao, tempoSemaforo;
+ 	ListaEventos *listaDeEventos;
+ 	int tempoDeSimulacao, tempoSemaforo, tempoAtualDoSistema;
 
  public:
  	Controle(int tempoDeSimulacao_, int tempoSemaforo_) {
  		tempoDeSimulacao = tempoDeSimulacao_;
  		tempoSemaforo = tempoSemaforo_;
+ 		tempoAtualDoSistema = 0;
  		criaSistema();
  	}
 
@@ -47,15 +48,71 @@ class Controle {
  		listaDePistas -> adiciona(l1Oeste);
  		listaDePistas -> adiciona(l1Leste);
 
- 		// Cria do primeiro cruzamento
- 		Semaforo *s1_o1Leste = new Semaforo(true);
- 		Semaforo *s1_n1Sul = new Semaforo(false);
- 		Semaforo *s1_s1Norte = new Semaforo(false);
- 		Semaforo *s1_c1Oeste = new Semaforo(false);
+ 		// Define as probabilidades de inserção de carros das pistas que são fontes
+ 		n1Sul   -> setTempoDeFonte(20, 5);
+ 		n2Sul   -> setTempoDeFonte(20, 5);
+ 		s1Norte -> setTempoDeFonte(30, 7);
+ 		s2Norte -> setTempoDeFonte(30, 7);
+ 		o1Leste -> setTempoDeFonte(10, 2);
+ 		l1Oeste -> setTempoDeFonte(10, 2);
+
+ 		// Cria semáforos do primeiro cruzamento
+ 		Semaforo *s1_o1Leste = new Semaforo(true , o1Leste);
+ 		Semaforo *s1_n1Sul   = new Semaforo(false, n1Sul  );
+ 		Semaforo *s1_s1Norte = new Semaforo(false, s1Norte);
+ 		Semaforo *s1_c1Oeste = new Semaforo(false, c1Oeste);
  		s1 -> adiciona(s1_o1Leste);
- 		s1 -> adiciona(s1_n1Sul);
+ 		s1 -> adiciona(s1_n1Sul  );
  		s1 -> adiciona(s1_s1Norte);
  		s1 -> adiciona(s1_c1Oeste);
+
+ 		// Cria semáforos do segundo cruzamento
+ 		Semaforo *s2_c1Leste = new Semaforo(true , c1Leste);
+ 		Semaforo *s2_n2Sul   = new Semaforo(false, n2Sul  );
+ 		Semaforo *s2_s2Norte = new Semaforo(false, s2Norte);
+ 		Semaforo *s2_l1Oeste = new Semaforo(false, l1Oeste);
+ 		s2 -> adiciona(s2_c1Leste);
+ 		s2 -> adiciona(s2_n2Sul  );
+ 		s2 -> adiciona(s2_s2Norte);
+ 		s2 -> adiciona(s2_l1Oeste);
+
+ 		// Inicializa as probabilidades dos semáforos
+ 		s1_o1Leste -> setProbabilidades({c1Leste, n1Norte, s1Sul}, {80, 10, 10});
+ 		s1_n1Sul -> setProbabilidades({c1Leste, o1Oeste, s1Sul}, {80, 10, 10});
+ 		s1_s1Norte -> setProbabilidades({c1Leste, n1Norte, o1Oeste}, {80, 10, 10});
+ 		s1_c1Oeste -> setProbabilidades({o1Oeste, n1Norte, s1Sul}, {40, 30, 30});
+ 		s2_c1Leste -> setProbabilidades({l1Leste, n2Norte, s2Sul}, {40, 30, 30});
+ 		s2_n2Sul -> setProbabilidades({l1Leste, c1Oeste, s2Sul}, {40, 30, 30});
+ 		s2_s2Norte -> setProbabilidades({l1Leste, s2Sul, c1Oeste}, {40, 30, 30});
+ 		s2_l1Oeste -> setProbabilidades({n2Norte, c1Leste, s2Sul}, {40, 30, 30});
  	}
+
+ 	void inicializaSimulacao() {
+ 		insereCarros();
+ 	}
+
+ 	void insereCarros() {
+ 		int tempoAtualDoMetodo, tempoEvento;
+ 		int i;
+ 		for (i = 0; i < listaDePistas -> getSize(); i++) {
+ 			if (listaDePistas -> mostra(i) -> isFonte()) {
+ 				Pista *pista = listaDePistas -> mostra(i);
+ 				tempoAtualDoMetodo = tempoAtualDoSistema;
+ 				// Enquanto o contador de tempo do método for menor
+ 				// que o tempo determinado para simulação, o laço
+ 				// deve continuar criando eventos de inserção de carros.
+ 				while (tempoAtualDoMetodo < tempoDeSimulacao) {
+ 					tempoEvento = pista -> calculaTempoDeInserirCarro(tempoAtualDoMetodo);
+ 					if (tempoEvento <= tempoDeSimulacao) {
+ 						Evento *evento = new Evento(tempoEvento, 0);
+ 						listaDeEventos -> adicionaEvento(evento);
+ 						tempoAtualDoMetodo = tempoEvento;
+ 					}
+ 				}
+ 			}
+ 		}
+ 	}
+
+ 	
 
 }	

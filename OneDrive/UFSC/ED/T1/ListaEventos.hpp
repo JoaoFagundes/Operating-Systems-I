@@ -1,9 +1,6 @@
 #include "ListaEnc.hpp"
 
 class ListaEventos : private ListaEnc<Evento> {
- 
- private:
- 	int tempoDoEventoAtual;
 
  public:
  	ListaEventos();
