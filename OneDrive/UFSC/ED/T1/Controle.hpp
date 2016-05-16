@@ -88,10 +88,15 @@ class Controle {
  	}
 
  	void inicializaSimulacao() {
- 		insereCarros();
+ 		create_insereCarros();
+ 		create_semaforosMudamDeEstado();
+ 		create_carrosChegamEmSemaforo();
  	}
 
- 	void insereCarros() {
+ 	// MÉTODOS DE CRIAÇÃO:
+ 	// Métodos que possuem "create_" no início indicam que estão explicitamente
+ 	// criando eventos.
+ 	void create_insereCarros() {
  		int tempoAtualDoMetodo, tempoEvento;
  		int i;
  		// POSSÍVEL ERRO AQUI NO 0.
@@ -114,7 +119,7 @@ class Controle {
  		}
  	}
 
- 	void semaforosMudamDeEstado() {
+ 	void create_semaforosMudamDeEstado() {
  		int tempoAtualDoMetodo, tempoEvento;
  		int i;
  		// POSSÍVEL ERRO AQUI NO 0.
@@ -125,10 +130,10 @@ class Controle {
  				Semaforo *semaforoAtual2 = s2 -> mostra(i);
  				tempoEvento = semaforoAtual1 -> calculaTrocaDeEstado(tempoAtualDoMetodo, tempoSemaforo);
  				if (tempoEvento <= tempoDeSimulacao) {
- 					Evento atual1Muda = new Evento(tempoEvento, 1, NULL, semaforoAtual1);
- 					Evento atual2Muda = new Evento(tempoEvento, 1, NULL, semaforoAtual2);
- 					Evento proximo1Muda = new Evento(tempoEvento + 1, 1, NULL, s1 -> mostra(i + 1));
- 					Evento proximo2Muda = new Evento(tempoEvento + 1, 1, NULL, s2 -> mostra(i + 1));
+ 					Evento *atual1Muda = new Evento(tempoEvento, 1, NULL, semaforoAtual1);
+ 					Evento *atual2Muda = new Evento(tempoEvento, 1, NULL, semaforoAtual2);
+ 					Evento *proximo1Muda = new Evento(tempoEvento + 1, 1, NULL, s1 -> mostra(i + 1));
+ 					Evento *proximo2Muda = new Evento(tempoEvento + 1, 1, NULL, s2 -> mostra(i + 1));
  					listaDeEventos -> adicionaEvento(atual1Muda);
  					listaDeEventos -> adicionaEvento(atual2Muda);
  					listaDeEventos -> adicionaEvento(proximo1Muda);
@@ -139,7 +144,7 @@ class Controle {
  		}
  	}
 
- 	void carrosChegamEmSemaforo() {
+ 	void create_carrosChegamEmSemaforo() {
  		int i, tempoQueChegou;
  		// POSSÍVEL ERRO NO 0.
  		for (i = 0; i < listaDeEventos -> getSize(); i++) {
@@ -147,13 +152,84 @@ class Controle {
  				Evento e = listaDeEventos -> mostra(i);
  				tempoQueChegou = (e -> getCarro() -> getPistaAtual() -> calculaTempoDaPista()) + e -> getMomentoQueExecuta();
  				if (tempoQueChegou <= tempoDeSimulacao) {
- 					Evento *evento = new Evento(tempoQueChegou, 2, e -> getCarro(), NULL);
+ 					Carro *carro = e -> getCarro();
+ 					Evento *evento = new Evento(tempoQueChegou, 2, carro, achaSemaforo(carro -> getPistaAtual()));
  					listaDeEventos -> adicionaEvento(evento);
  				}
  			}
  		}
  	}
 
- 	
+ 	// MÉTODOS DE EXECUÇÃO:
+ 	// Esses métodos executam os eventos e implicitamente criam novos eventos.
+
+ 	void processaEvento() {
+ 		int i, tempoAtualDoMetodo;
+ 		for (i = 0; i < listaDeEventos -> getSize(); i++) {
+ 			Evento evento = listaDeEventos -> mostra(i);
+ 			switch (evento -> getTipoEvento()) {
+ 				case 0:
+ 					Carro *carro = evento -> getCarro();
+ 					Pista *pista = carro -> getPistaAtual();
+ 					if (pista -> cabeCarroNaPista(carro))
+ 						pista -> adicionaCarro(carro);
+ 					tempoAtualDoMetodo = evento -> getMomentoQueExecuta();
+ 					break;
+ 				case 1:
+ 					Semaforo *semaforo = evento -> getSemaforo();
+ 					semaforo -> mudaEstado();
+ 					tempoAtualDoMetodo = evento -> getMomentoQueExecuta();
+ 					break;
+ 				case 2:
+ 					carroChegouEmSemaforo(evento);
+ 					tempoAtualDoMetodo = evento -> getMomentoQueExecuta();
+ 					break;
+ 				case 3:
+ 					Carro *carro = evento -> getCarro();
+ 					Pista *pistaAtual = carro -> getPistaAtual();
+ 					pistaAtual -> retiraCarro();
+ 					tempoAtualDoMetodo = evento -> getMomentoQueExecuta();
+ 					break;
+ 			}
+ 			listaDeEventos -> retiraEspecifico(evento);
+ 		}
+
+ 	}
+
+ 	void carroChegouEmSemaforo(Evento *evento) {
+ 		int tempoDoEvento = evento -> getMomentoQueExecuta();
+ 		Semaforo *semaforo = evento -> getSemaforo();
+ 		Pista *proximaPista = semaforo -> getProximaPista();
+ 		if (proximaPista -> cabeCarroNaPista(evento -> getCarro())) {
+ 			semaforo -> trocaCarroDePista(proximaPista, evento -> getCarro());
+ 			carroEntrouEmNovaPista(evento -> getCarro(), tempoDoEvento);
+ 		}
+ 		else 
+ 			Evento *novoEvento = new Evento(tempoDoEvento + 2, 2, evento -> getCarro(), evento -> getSemaforo());	
+ 	}
+
+ 	void carroEntrouEmNovaPista(Carro *carro, int tempoAtual) {
+ 		Evento *novoEvento;
+ 		Pista *pistaAtual = carro -> getPistaAtual();
+ 		int tempoDePista = pistaAtual -> calculaTempoDaPista()
+ 		if (pistaAtual -> isSumidouro())
+ 			novoEvento = new Evento(tempoAtual + tempoDePista, 3, carro, NULL);
+ 		else
+ 			novoEvento = new Evento(tempoAtual + tempoDePista, 2, carro, achaSemaforo(pistaAtual));
+ 		
+ 		listaDeEventos -> adicionaEvento(novoEvento);
+ 	}
+
+ 	Semaforo achaSemaforo(Pista *pista) {
+ 		int i;
+ 		for (i = 0; i < s1 -> getSize(); i++) {
+ 			Semaforo *semaforo1 = s1 -> mostra(i);
+ 			Semaforo *semaforo2 = s2 -> mostra(i);
+ 			if (semaforo1 -> getPistaAtual() == pista)
+ 				return semaforo1;
+ 			else if (semaforo2 -> getPistaAtual() == pista)
+ 				return semaforo2;
+ 		}
+ 	}
 
 }	

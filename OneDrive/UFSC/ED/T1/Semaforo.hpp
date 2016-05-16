@@ -28,8 +28,19 @@ class Semaforo {
 			return pistasDestino[2]
 	}
 
+	void trocaCarroDePista(Pista *proximaPista, Carro *carro) {
+		if (!aberto)
+			throw ExcecaoSinalFechado();
+		carro -> getPistaAtual() -> retiraCarro();
+		proximaPista -> adicionaCarro(carro);
+	}
+
  	bool isAberto() {
  		return aberto;
+ 	}
+
+ 	Pista getPistaAtual() {
+ 		return pistaAtual;
  	}
 
  	void mudaEstado() {

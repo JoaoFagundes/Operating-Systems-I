@@ -10,7 +10,7 @@ class Evento {
 		0 = Novo carro entrou na pista;
 		1 = Semáforo mudou de estado;
 		2 = Carro chegou em um semáforo;
-		3 = Carro trocou de pista.
+		3 = Carro chegou no fim de pista sumidouro
  	*/
  	int tipoEvento;
 
@@ -20,18 +20,6 @@ class Evento {
  		momentoQueExecuta = _momentoQueExecuta;
  		tipoEvento = _tipoEvento;
  		processaEvento();
- 	}
-
- 	void processaEvento() {	
- 		switch (tipoEvento) {
- 			case 0:
-
- 			case 1:
-
- 			case 2:
-
- 			case 3: 
- 		}
  	}
 
  	String getTipoEvento() {
@@ -48,6 +36,10 @@ class Evento {
 
  	Carro getCarro() {
  		return carro;
+ 	}
+
+ 	Semaforo getSemaforo() {
+ 		return semaforo;
  	}
 
 }
