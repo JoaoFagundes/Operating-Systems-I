@@ -1,5 +1,7 @@
 // Copyright [2016] <João Victor Fagundes>
 
+#ifndef FILAENC_HPP_
+#define FILAENC_HPP_
 #include "ListaEnc.hpp"
 
 template <typename T>
@@ -84,4 +86,6 @@ class FilaEnc : private ListaEnc<T> {
 	    ListaEnc<T>::destroiLista();
 	}
 };
+
+#endif
 

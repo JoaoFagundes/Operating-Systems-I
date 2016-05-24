@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#ifndef SEMAFORO_HPP_
+#define SEMAFORO_HPP_
 #include "Pista.hpp"
 #include "ExcecaoSinalFechado.hpp"
 
@@ -9,25 +11,25 @@ class Semaforo {
 	int *probabilidades;
 	bool aberto;
  public:
- 	Semaforo(Pista *_pistaAtual, bool _aberto) {
+ 	Semaforo(bool _aberto, Pista *_pistaAtual) {
  		pistaAtual = _pistaAtual;
  		aberto = _aberto;
  	}
 
- 	void setProbabilidades(Pista[] pistas[3], int _probabilidades[3]) {
+ 	void setProbabilidades(Pista pistas[3], int _probabilidades[3]) {
  		probabilidades = _probabilidades;
  		pistasDestino = pistas;
  	}
 
- 	Pista getProximaPista() {
+ 	Pista* getProximaPista() {
  		srand(time(0));
 		int randNum = (rand() % 100);
-		if (randNum < probabilidades[0]) 
-			return pistasDestino[0]
+		if (randNum < probabilidades[0])
+			return &pistasDestino[0];
 		else if (randNum < (probabilidades[0] + probabilidades[1]))
-			return pistasDestino[1]
-		else 
-			return pistasDestino[2]
+			return &pistasDestino[1];
+		else
+			return &pistasDestino[2];
 	}
 
 	void trocaCarroDePista(Pista *proximaPista, Carro *carro) {
@@ -41,7 +43,7 @@ class Semaforo {
  		return aberto;
  	}
 
- 	Pista getPistaAtual() {
+ 	Pista* getPistaAtual() {
  		return pistaAtual;
  	}
 
@@ -52,4 +54,6 @@ class Semaforo {
  	int calculaTrocaDeEstado(int _tempoAtual, int _tempoDeSemaforo) {
  		return _tempoAtual + _tempoDeSemaforo;
  	}
-}
+};
+
+#endif

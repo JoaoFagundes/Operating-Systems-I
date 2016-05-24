@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
-#include "Sistema.hpp"
+#include "Controle.hpp"
 
 int main() {
 	int tempoDeSimulacao = 50;

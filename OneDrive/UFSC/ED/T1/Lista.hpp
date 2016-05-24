@@ -1,5 +1,7 @@
 // Copyright [2016] <João Victor Fagundes>
 
+#ifndef LISTA_HPP_
+#define LISTA_HPP_
 template <typename T>
 //! Uma classe Lista.
 /*!
@@ -286,3 +288,4 @@ class Lista {
 	}
 };
 
+#endif

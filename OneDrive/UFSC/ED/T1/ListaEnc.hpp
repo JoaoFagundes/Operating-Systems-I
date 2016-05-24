@@ -1,5 +1,7 @@
 // Copyright [2016] <João Victor Fagundes>
 
+#ifndef LISTAENC_HPP_
+#define LISTAENC_HPP_
 #include "Elemento.hpp"
 
 template<typename T>
@@ -385,3 +387,5 @@ class ListaEnc {
     */
 	int size;
 };
+
+#endif

@@ -1,20 +1,23 @@
+#ifndef CONTROLE_HPP_
+#define CONTROLE_HPP_
 #include "ListaCirc.hpp"
 #include "ListaEnc.hpp"
 #include "ListaEventos.hpp"
 #include "Semaforo.hpp"
 #include "Pista.hpp"
 #include "Carro.hpp"
-#include "ExcecaoSinalVermelho.hpp"
+#include "ExcecaoSinalFechado.hpp"
 #include "Evento.hpp"
 #include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 
 class Controle {
  private: 
  	static int carrosQueEntraram;
  	static int carrosQueSairam;
- 	ListaCirc(*Semaforo) *s1, *s2;
- 	ListaEnc(*Pista) *listaDePistas;
+ 	ListaCirc<Semaforo*> *s1, *s2;
+ 	ListaEnc<Pista*> *listaDePistas;
  	ListaEventos *listaDeEventos;
  	int tempoDeSimulacao, tempoSemaforo, tempoAtualDoSistema;
 
@@ -61,7 +64,7 @@ class Controle {
  		listaDePistas -> adiciona(l1Oeste);
  		listaDePistas -> adiciona(l1Leste);
 
- 		// Define as probabilidades de inserção de carros das pistas que são fontes
+ 		// Define as probabilidades de inserÃ§Ã£o de carros das pistas que sÃ£o fontes
  		n1Sul   -> setTempoDeFonte(20, 5);
  		n2Sul   -> setTempoDeFonte(20, 5);
  		s1Norte -> setTempoDeFonte(30, 7);
@@ -69,7 +72,7 @@ class Controle {
  		o1Leste -> setTempoDeFonte(10, 2);
  		l1Oeste -> setTempoDeFonte(10, 2);
 
- 		// Cria semáforos do primeiro cruzamento
+ 		// Cria semÃ¡foros do primeiro cruzamento
  		Semaforo *s1_o1Leste = new Semaforo(true , o1Leste);
  		Semaforo *s1_n1Sul   = new Semaforo(false, n1Sul  );
  		Semaforo *s1_s1Norte = new Semaforo(false, s1Norte);
@@ -79,7 +82,7 @@ class Controle {
  		s1 -> adiciona(s1_s1Norte);
  		s1 -> adiciona(s1_c1Oeste);
 
- 		// Cria semáforos do segundo cruzamento
+ 		// Cria semÃ¡foros do segundo cruzamento
  		Semaforo *s2_c1Leste = new Semaforo(true , c1Leste);
  		Semaforo *s2_n2Sul   = new Semaforo(false, n2Sul  );
  		Semaforo *s2_s2Norte = new Semaforo(false, s2Norte);
@@ -89,15 +92,37 @@ class Controle {
  		s2 -> adiciona(s2_s2Norte);
  		s2 -> adiciona(s2_l1Oeste);
 
- 		// Inicializa as probabilidades dos semáforos
- 		s1_o1Leste -> setProbabilidades({c1Leste, n1Norte, s1Sul}, {80, 10, 10});
- 		s1_n1Sul -> setProbabilidades({c1Leste, o1Oeste, s1Sul}, {80, 10, 10});
- 		s1_s1Norte -> setProbabilidades({c1Leste, n1Norte, o1Oeste}, {80, 10, 10});
- 		s1_c1Oeste -> setProbabilidades({o1Oeste, n1Norte, s1Sul}, {40, 30, 30});
- 		s2_c1Leste -> setProbabilidades({l1Leste, n2Norte, s2Sul}, {40, 30, 30});
- 		s2_n2Sul -> setProbabilidades({l1Leste, c1Oeste, s2Sul}, {40, 30, 30});
- 		s2_s2Norte -> setProbabilidades({l1Leste, s2Sul, c1Oeste}, {40, 30, 30});
- 		s2_l1Oeste -> setProbabilidades({n2Norte, c1Leste, s2Sul}, {40, 30, 30});
+ 		// Inicializa as probabilidades dos semÃ¡foros
+		/*
+			Como as probabilidades sÃ£o distribuÃ­das em 2 tipos ({80, 10, 10} e {40, 30, 30},
+			faremos apenas 2 arranjos para elas e vÃ¡rios para as pistas.
+		*/
+		int probabilidades1[3] = { 80, 10, 10 };
+		int probabilidades2[3] = { 40, 30, 30 };
+
+		Pista *pistas1[3] = { c1Leste, n1Norte, s1Sul };
+		s1_o1Leste->setProbabilidades(*pistas1, probabilidades1);
+
+		Pista *pistas2[3] = { c1Leste, o1Oeste, s1Sul };
+ 		s1_n1Sul -> setProbabilidades(*pistas2, probabilidades1);
+
+		Pista *pistas3[3] = { c1Leste, n1Norte, o1Oeste };
+ 		s1_s1Norte -> setProbabilidades(*pistas3, probabilidades1);
+
+		Pista *pistas4[3] = { o1Oeste, n1Norte, s1Sul };
+ 		s1_c1Oeste -> setProbabilidades(*pistas4, probabilidades2);
+
+		Pista *pistas5[3] = { l1Leste, n2Norte, s2Sul };
+ 		s2_c1Leste -> setProbabilidades(*pistas5, probabilidades2);
+
+		Pista *pistas6[3] = { l1Leste, c1Oeste, s2Sul };
+ 		s2_n2Sul -> setProbabilidades(*pistas6, probabilidades2);
+
+		Pista *pistas7[3] = { l1Leste, s2Sul, c1Oeste };
+ 		s2_s2Norte -> setProbabilidades(*pistas7, probabilidades2);
+
+		Pista *pistas8[3] = { n2Norte, c1Leste, s2Sul };
+ 		s2_l1Oeste -> setProbabilidades(*pistas8, probabilidades2);
  	}
 
  	void inicializaSimulacao() {
@@ -107,20 +132,20 @@ class Controle {
  		processaEvento();
  	}
 
- 	// MÉTODOS DE CRIAÇÃO:
- 	// Métodos que possuem "create_" no início indicam que estão explicitamente
+ 	// MÃ‰TODOS DE CRIAÃ‡ÃƒO:
+ 	// MÃ©todos que possuem "create_" no inÃ­cio indicam que estÃ£o explicitamente
  	// criando eventos.
  	void create_insereCarros() {
  		int tempoAtualDoMetodo, tempoEvento;
  		int i;
- 		// POSSÍVEL ERRO AQUI NO 0.
+ 		// POSSÃ�VEL ERRO AQUI NO 0.
  		for (i = 0; i < listaDePistas -> getSize(); i++) {
  			if (listaDePistas -> mostra(i) -> isFonte()) {
  				Pista *pista = listaDePistas -> mostra(i);
  				tempoAtualDoMetodo = tempoAtualDoSistema;
- 				// Enquanto o contador de tempo do método for menor
- 				// que o tempo determinado para simulação, o laço
- 				// deve continuar criando eventos de inserção de carros.
+ 				// Enquanto o contador de tempo do mÃ©todo for menor
+ 				// que o tempo determinado para simulaÃ§Ã£o, o laÃ§o
+ 				// deve continuar criando eventos de inserÃ§Ã£o de carros.
  				while (tempoAtualDoMetodo < tempoDeSimulacao) {
  					tempoEvento = pista -> calculaTempoDeInserirCarro(tempoAtualDoMetodo);
  					if (tempoEvento <= tempoDeSimulacao) {
@@ -136,8 +161,9 @@ class Controle {
  	void create_semaforosMudamDeEstado() {
  		int tempoAtualDoMetodo, tempoEvento;
  		int i;
- 		// POSSÍVEL ERRO AQUI NO 0.
- 		for (i = 0; i < s1 -> getSize(); i++) {
+		// VerUltimo(): mostra o tamanho da lista.
+ 		// POSSÃ�VEL ERRO AQUI NO 0.
+ 		for (i = 0; i < s1 -> verUltimo(); i++) {
  			tempoAtualDoMetodo = tempoAtualDoSistema;
  			while (tempoAtualDoMetodo < tempoAtualDoSistema) {
  				Semaforo *semaforoAtual1 = s1 -> mostra(i);
@@ -160,10 +186,11 @@ class Controle {
 
  	void create_carrosChegamEmSemaforo() {
  		int i, tempoQueChegou;
- 		// POSSÍVEL ERRO NO 0.
+ 		// POSSÃ�VEL ERRO NO 0.
  		for (i = 0; i < listaDeEventos -> getSize(); i++) {
  			if (listaDeEventos -> mostra(i) -> getTipoEvento() == 0) {
- 				Evento e = listaDeEventos -> mostra(i);
+ 				Evento *e = listaDeEventos -> mostra(i);
+ 				int tempoDaPista = e -> getCarro() -> getPistaAtual() -> calculaTempoDaPista();
  				tempoQueChegou = (e -> getCarro() -> getPistaAtual() -> calculaTempoDaPista()) + e -> getMomentoQueExecuta();
  				if (tempoQueChegou <= tempoDeSimulacao) {
  					Carro *carro = e -> getCarro();
@@ -174,13 +201,13 @@ class Controle {
  		}
  	}
 
- 	// MÉTODOS DE EXECUÇÃO:
- 	// Esses métodos executam os eventos e implicitamente criam novos eventos.
+ 	// MÃ‰TODOS DE EXECUÃ‡ÃƒO:
+ 	// Esses mÃ©todos executam os eventos e implicitamente criam novos eventos.
 
  	void processaEvento() {
  		int i, tempoAtualDoMetodo;
  		for (i = 0; i < listaDeEventos -> getSize(); i++) {
- 			Evento evento = listaDeEventos -> mostra(i);
+ 			Evento *evento = listaDeEventos -> mostra(i);
  			switch (evento -> getTipoEvento()) {
  				case 0:
  					Carro *carro = evento -> getCarro();
@@ -225,7 +252,7 @@ class Controle {
  			} else { 
  				novoEvento = new Evento(tempoDoEvento + 2, 2, evento -> getCarro(), semaforo);	
  			}
- 		} catch (exception& e) {
+ 		} catch (std::exception& e) {
  			tempoQueOSemaforoAbre = achaAberturaDeSemaforo(tempoDoEvento, semaforo);
  			novoEvento = new Evento(tempoQueOSemaforoAbre + 1, 2, evento -> getCarro(), semaforo);
  		}
@@ -236,7 +263,7 @@ class Controle {
  	void carroEntrouEmNovaPista(Carro *carro, int tempoAtual) {
  		Evento *novoEvento;
  		Pista *pistaAtual = carro -> getPistaAtual();
- 		int tempoDePista = pistaAtual -> calculaTempoDaPista()
+		int tempoDePista = pistaAtual -> calculaTempoDaPista();
  		if (pistaAtual -> isSumidouro())
  			novoEvento = new Evento(tempoAtual + tempoDePista, 3, carro, NULL);
  		else
@@ -246,13 +273,14 @@ class Controle {
  	}
 
  	void imprimeResultadoDaSimulacao() {
- 		printf("Número de carros que entraram no sistema: %d.\n", carrosQueEntraram);
- 		printf("Número de carros que saíram do sistema: %d.\n", carrosQueSairam);
+ 		printf("NÃºmero de carros que entraram no sistema: %d.\n", carrosQueEntraram);
+ 		printf("NÃºmero de carros que saÃ­ram do sistema: %d.\n", carrosQueSairam);
  	}
 
- 	Semaforo achaSemaforo(Pista *pista) {
+ 	Semaforo* achaSemaforo(Pista *pista) {
  		int i;
- 		for (i = 0; i < s1 -> getSize(); i++) {
+		// VerUltimo(): mostra o tamanho da lista.
+ 		for (i = 0; i < s1 -> verUltimo(); i++) {
  			Semaforo *semaforo1 = s1 -> mostra(i);
  			Semaforo *semaforo2 = s2 -> mostra(i);
  			if (semaforo1 -> getPistaAtual() == pista)
@@ -260,6 +288,8 @@ class Controle {
  			else if (semaforo2 -> getPistaAtual() == pista)
  				return semaforo2;
  		}
+
+ 		throw "SemáforoNãoEncontrado";
  	}
 
  	int achaAberturaDeSemaforo(int tempoAtual, Semaforo *semaforo) {
@@ -271,9 +301,11 @@ class Controle {
  				return evento -> getMomentoQueExecuta();
  			}
  		}
+
+ 		return tempoAtual + 2;
  	}
 
- 	void adicionaCarrosQueEntraram() {
+ 	static void adicionaCarrosQueEntraram() {
  		carrosQueEntraram++;
  	}
 
@@ -281,7 +313,7 @@ class Controle {
  		return carrosQueEntraram;
  	}
 
- 	void adicionaCarrosQueSairam() {
+ 	static void adicionaCarrosQueSairam() {
  		carrosQueSairam++;
  	}
 
@@ -289,4 +321,6 @@ class Controle {
  		return carrosQueSairam;
  	}
 
-}	
+};
+
+#endif

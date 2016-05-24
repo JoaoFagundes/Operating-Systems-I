@@ -1,13 +1,14 @@
+#ifndef PISTA_HPP_
+#define PISTA_HPP_
 #include <stdlib.h>
 #include <time.h>
-
-#include "Fila.hpp"
 #include "Carro.hpp"
 #include "Lista.hpp"
+#include "FilaEnc.hpp"
 
 class Pista : private FilaEnc<Carro> {
  private:
-	Pista pistasAdjacentes[3]; 
+	Pista *pistasAdjacentes[3] = {};
 	int velocidade, tamanho, maxCarros, espacoDisponivel;
 	int fonte_tempoFixo, fonte_intervalo, fonte_tempoVariante;
 	bool pistaCheia, fonte, sumidouro;
@@ -20,8 +21,6 @@ class Pista : private FilaEnc<Carro> {
 		fonte = _fonte;
 		sumidouro = _sumidouro;
 		maxCarros = (int) (_tamanho / 5);
-		pistasAdjacentes = pistas;
-		probabilidades = _probabilidades;
  	}
 
 	int getVelocidade() {
@@ -31,6 +30,11 @@ class Pista : private FilaEnc<Carro> {
 	int getTamanho() {
 		return tamanho;
 	}
+
+	Carro retiraCarro() {
+ 		Controle::adicionaCarrosQueSairam();
+ 		return FilaEnc<Carro>::retira();
+  	}
 
 	int calculaTempoDaPista() {
 		return (int) (tamanho / (velocidade / 3,6));
@@ -51,7 +55,9 @@ class Pista : private FilaEnc<Carro> {
  		fonte_tempoVariante = _tempoVariante;
  		fonte_intervalo =  (2 * _tempoVariante) + 1;
  	}
- 
+
+ 	
+
  	bool cabeCarroNaPista(Carro *carro) {
  		if (espacoDisponivel >= carro -> getTamanho())
  			return true;
@@ -74,13 +80,12 @@ class Pista : private FilaEnc<Carro> {
  	}
  
  	void adicionaCarro(Carro *carro) {
- 		espacoDisponivel -= carro.getTamanho();
+ 		espacoDisponivel -= carro -> getTamanho();
  		FilaEnc<Carro>::inclui(*carro);
  		Controle::adicionaCarrosQueEntraram();
  	}
  
- 	Carro retiraCarro() {
- 		Controle::adicionaCarrosQueSairam();
- 		return FilaEnc<Carro>::retira();
-  	}
-}
+ 	
+};
+
+#endif

@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#ifndef EVENTO_HPP_
+#define EVENTO_HPP_
 #include "ListaEnc.hpp"
 
 class Evento {
@@ -20,14 +22,15 @@ class Evento {
  	Evento(int _momentoQueExecuta, int _tipoEvento, Carro *_carro, Semaforo *_semaforo) {
  		momentoQueExecuta = _momentoQueExecuta;
  		tipoEvento = _tipoEvento;
- 		processaEvento();
+ 		carro = _carro;
+ 		semaforo = _semaforo;
  	}
 
- 	String getTipoEvento() {
- 		return tipo;
+ 	int getTipoEvento() {
+ 		return tipoEvento;
  	}
 
- 	int setTipoEvento(int _tipo) {
+ 	void setTipoEvento(int _tipo) {
  		tipoEvento = _tipo;
  	}
 
@@ -35,12 +38,14 @@ class Evento {
  		return momentoQueExecuta;
  	}
 
- 	Carro getCarro() {
+ 	Carro* getCarro() {
  		return carro;
  	}
 
- 	Semaforo getSemaforo() {
+ 	Semaforo* getSemaforo() {
  		return semaforo;
  	}
 
-}
+};
+
+#endif

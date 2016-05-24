@@ -1,5 +1,7 @@
 // Copyright [2016] <João Victor Fagundes>
 
+#ifndef LISTACIRC_HPP_
+#define LISTACIRC_HPP_
 #include "ListaEnc.hpp"
 
 template<typename T>
@@ -327,3 +329,5 @@ class ListaCirc : private ListaEnc<T> {
     */
     Elemento<T> *sentinela;
 };
+
+#endif

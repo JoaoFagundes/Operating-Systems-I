@@ -1,20 +1,21 @@
+#ifndef CARRO_HPP_
+#define CARRO_HPP_
 #include <stdlib.h>
 #include <time.h>
 
 class Carro {
  private:
 	int tamanho;
-	Pista pistaAtual;
+	Pista *pistaAtual;
  
  public:
 
- 	Carro(Pista _pistaAtual) {
+ 	Carro(Pista *_pistaAtual) {
  		tamanho = calculaTamanho();
  		pistaAtual = _pistaAtual;
  	}
 
  	~Carro() {
- 		delete tamanho;
  		delete pistaAtual;
  	}
 
@@ -29,11 +30,13 @@ class Carro {
  	int getTamanho() {
  			return tamanho;
    	}
- 	void setPistaAtual(_pistaAtual) {
+ 	void setPistaAtual(Pista *_pistaAtual) {
  		pistaAtual = _pistaAtual;
  	}
 
- 	Pista getPistaAtual() {
+ 	Pista* getPistaAtual() {
  		return pistaAtual;
  	}
-}
+};
+
+#endif
