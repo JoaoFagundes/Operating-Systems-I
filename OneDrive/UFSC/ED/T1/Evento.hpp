@@ -2,6 +2,9 @@
 #ifndef EVENTO_HPP_
 #define EVENTO_HPP_
 #include "ListaEnc.hpp"
+#include "Carro.h"
+#include "Pista.h"
+#include "Semaforo.hpp"
 
 class Evento {
  private:

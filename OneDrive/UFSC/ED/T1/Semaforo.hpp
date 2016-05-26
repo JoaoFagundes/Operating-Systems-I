@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #ifndef SEMAFORO_HPP_
 #define SEMAFORO_HPP_
-#include "Pista.hpp"
+#include "Carro.h"
 #include "ExcecaoSinalFechado.hpp"
 
 class Semaforo {
